@@ -1,0 +1,126 @@
+<section data-intro class="bg-slate-900/20">
+  <h2>مقدمه</h2>
+  <p>
+    اگر تجربه‌ی کار با سیستم عامل ویندوز را داشته باشید، احتمالاً با روش نصب نرم‌افزار در آن آشنا
+    هستید: جستجو در اینترنت، پیدا کردن وب‌سایت نرم‌افزار، دانلود یک فایل .exe و اجرای آن.
+    این روش می‌تواند خطرات امنیتی داشته باشد و مدیریت و حذف این نرم‌افزارها نیز همیشه ساده نیست.
+    لینوکس رویکردی کاملاً متفاوت، متمرکز و امن‌تر را ارائه می‌دهد.
+  </p>
+  <p>
+    در قلب این رویکرد، مفهومی به نام مدیر پکیج (Package Manager) قرار دارد. مدیر پکیج یک
+    سیستم مرکزی است که وظیفه‌ی نصب، بروزرسانی، پیکربندی و حذف نرم‌افزارها را به عهده دارد. این
+    ابزار، نرم‌افزارها را از منابعی امن و مورد تأیید به نام مخازن (Repositories) دریافت
+    می‌کند. این مخازن مانند یک «فروشگاه اپلیکیشن» غول‌پیکر و رایگان عمل می‌کنند که هزاران نرم‌افزار
+    تست‌شده و آماده‌به‌نصب را در خود جای داده‌اند. این سیستم، امنیت، پایداری و مدیریت آسان
+    نرم‌افزارها را تضمین می‌کند.
+  </p>
+</section>
+<section>
+  <h2>مدیران پکیج در توزیع‌های مختلف</h2>
+  <p>
+    توزیع‌های مختلف لینوکس از سیستم‌های مدیریت پکیج متفاوتی استفاده می‌کنند. دو خانواده‌ی اصلی در
+    این زمینه عبارتند از:
+  </p>
+  <ul class="list-disc pr-6">
+    <li>
+      <b>خانواده Debian (شامل Debian، Ubuntu، Linux Mint و ...):</b>
+      این توزیع‌ها از فایل‌های پکیج با پسوند .deb و ابزار خط فرمان APT (مخفف Advanced Package Tool) استفاده می‌کنند.
+    </li>
+    <li>
+      <b>خانواده Red Hat (شامل Fedora، CentOS، RHEL و ...):</b>
+      این توزیع‌ها از فایل‌های پکیج با پسوند .rpm و ابزارهای خط فرمان DNF (یا نسخه‌ی قدیمی‌تر آن YUM) استفاده می‌کنند.
+    </li>
+  </ul>
+  <p>
+    اگرچه دستورات این ابزارها کمی با هم تفاوت دارند، اما مفاهیم اصلی پشت آن‌ها یکسان است. در این
+    دوره، ما بر روی APT که در توزیع‌های مبتنی بر دبیان مانند اوبونتو بسیار رایج است،
+    تمرکز خواهیم کرد.
+  </p>
+</section>
+<section>
+  <h2>کار با APT</h2>
+  <p>
+    تمام دستوراتی که نرم‌افزاری را در سیستم نصب، حذف یا تغییر می‌دهند، نیازمند دسترسی ریشه هستند و
+    باید با sudo اجرا شوند.
+  </p>
+
+  <h3>۱. بروزرسانی لیست پکیج‌ها: apt update</h3>
+  <p>
+    اولین و مهم‌ترین قدم قبل از هر کاری، همگام‌سازی لیست پکیج‌های محلی سیستم شما با آخرین اطلاعات
+    موجود در مخازن است. دستور apt update این کار را انجام می‌دهد. این دستور هیچ
+    نرم‌افزاری را نصب یا آپدیت نمی‌کند، بلکه فقط «فهرست» نرم‌افزارهای موجود را بروز می‌کند. همیشه
+    قبل از نصب هر پکیجی، این دستور را اجرا کنید.
+  </p>
+  <pre dir="ltr" data-cm-lang="bash">
+$ sudo apt update
+Hit:1 http://us.archive.ubuntu.com/ubuntu jammy InRelease
+Get:2 http://us.archive.ubuntu.com/ubuntu jammy-updates InRelease [119 kB]
+...
+Fetched 1,345 kB in 2s (842 kB/s)
+Reading package lists... Done
+</pre>
+
+  <h3>۲. نصب یک پکیج: apt install</h3>
+  <p>
+    پس از بروزرسانی لیست، می‌توانید با دستور apt install یک یا چند پکیج را نصب کنید.
+    APT به طور خودکار تمام وابستگی‌ها (Dependencies) یعنی نرم‌افزارهای دیگری که برای
+    اجرای پکیج مورد نظر لازم هستند را نیز پیدا و نصب می‌کند.
+  </p>
+  <pre dir="ltr" data-cm-lang="bash">
+$ sudo apt install neofetch
+Reading package lists... Done
+Building dependency tree... Done
+The following NEW packages will be installed:
+  neofetch
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 104 kB of archives.
+After this operation, 434 kB of additional disk space will be used.
+Do you want to continue? [Y/n]
+</pre>
+
+  <h3>۳. حذف یک پکیج: apt remove و apt purge</h3>
+  <p>
+    برای حذف یک پکیج، از دستور apt remove استفاده می‌کنیم. این دستور برنامه را حذف
+    می‌کند، اما ممکن است فایل‌های پیکربندی آن را برای استفاده در آینده نگه دارد.
+  </p>
+  <pre dir="ltr" data-cm-lang="bash">
+$ sudo apt remove neofetch
+</pre>
+  <p>
+    اگر می‌خواهید یک پکیج را به همراه تمام فایل‌های پیکربندی سیستمی آن به طور کامل پاک کنید، از
+    دستور apt purge استفاده کنید. این روش برای حذف کامل و تمیز یک نرم‌افزار توصیه می‌شود.
+  </p>
+  <pre dir="ltr" data-cm-lang="bash">
+$ sudo apt purge neofetch
+</pre>
+
+  <h3>۴. جستجوی یک پکیج: apt search</h3>
+  <p>
+    اگر نام دقیق یک پکیج را نمی‌دانید، می‌توانید با apt search در نام و توضیحات پکیج‌های
+    موجود در مخازن جستجو کنید. این دستور به sudo نیاز ندارد.
+  </p>
+  <pre dir="ltr" data-cm-lang="bash">
+$ apt search "firewall configuration"
+Sorting... Done
+Full Text Search... Done
+gufw/jammy,jammy 22.04.0-0ubuntu2 all
+  graphical user interface for ufw
+</pre>
+</section>
+<section>
+  <h2>دریافت اطلاعات در مورد یک پکیج</h2>
+  <p>
+    برای مشاهده‌ی اطلاعات کامل در مورد یک پکیج (چه نصب شده باشد چه نه)، مانند نسخه‌ی آن، حجم،
+    توضیحات کامل و وابستگی‌هایش، از دستور apt show استفاده کنید.
+  </p>
+  <pre dir="ltr" data-cm-lang="bash">
+$ apt show neofetch
+Package: neofetch
+Version: 7.1.0-3
+Priority: optional
+Section: universe/utils
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+...
+Description: Shows Linux System Information with an ASCII art logo
+</pre>
+</section>
